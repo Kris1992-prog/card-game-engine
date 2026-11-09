@@ -6,8 +6,10 @@ namespace CardGameEngine
         public string Name { get; set; }
         public int Cost { get; set; }
         public int Attack { get; set; }
-        public int Defense { get; set; }
+        public int MaxDefense { get; set; }
+        public int CurrentDefense { get; set; }
         public string CardType { get; set; }
+        public bool CanAttack { get; set; }
 
         public Card(int id, string name, int cost, int attack, int defense, string cardType = "Creature")
         {
@@ -15,13 +17,15 @@ namespace CardGameEngine
             Name = name;
             Cost = cost;
             Attack = attack;
-            Defense = defense;
+            MaxDefense = defense;
+            CurrentDefense = defense;
             CardType = cardType;
+            CanAttack = false; // Di norma una creatura appena evocata ha la "debolezza da evocazione"
         }
 
         public override string ToString()
         {
-            return $"[{Name} | Costo: {Cost} | ATK: {Attack} / DEF: {Defense} | Tipo: {CardType}]";
+            return $"[{Name} | Costo: {Cost} | ATK: {Attack} / DEF: {CurrentDefense}/{MaxDefense} | Tipo: {CardType}]";
         }
     }
 }

@@ -7,52 +7,32 @@ namespace CardGameEngine
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== Lab 3: Turn & Battle Engine ===");
+            Console.WriteLine("=== Lab 4 (Aggiornato): Regola di Protezione della Plancia ===");
 
-            // 1. Catalogo di base delle carte
-            List<Card> masterCatalog = new List<Card>
-            {
-                new Card(1, "Drago di Fuoco", 5, 6, 4),
-                new Card(2, "Goblin Esploratore", 1, 1, 1),
-                new Card(3, "Cavaliere con Scudo", 3, 2, 5),
-                new Card(4, "Arciere Elfo", 2, 3, 2),
-                new Card(5, "Pozione di Cura", 2, 0, 0, "Spell")
-            };
+            Player p1 = new Player("Kris", 20, new List<Card> { new Card(1, "Goblin Esploratore", 1, 3, 1) });
+            Player p2 = new Player("Nemico", 20, new List<Card> { new Card(2, "Orco Guardiano", 2, 2, 3) });
 
-            // 2. Creiamo il giocatore con 20 HP e il mazzo iniziale
-            Player player = new Player("Kris", 20, masterCatalog);
+            // Mettiamo una creatura pronta ad attaccare per Kris e un Orco a difesa del Nemico
+            Card goblin = new Card(1, "Goblin Esploratore", 1, 3, 1) { CanAttack = true };
+            Card orco = new Card(2, "Orco Guardiano", 2, 2, 3);
 
-            // Diamo una mano iniziale di 2 carte pescando dal deck
-            for (int i = 0; i < 2; i++)
-            {
-                Card? initialCard = player.PlayerDeck.DrawCard();
-                if (initialCard != null)
-                {
-                    player.Hand.Add(initialCard);
-                }
-            }
+            p1.Board.Add(goblin);
+            p2.Board.Add(orco);
 
-            // 3. Simuliamo l'inizio del turno
-            player.StartTurn();
+            Console.WriteLine($"\nPlancia {p1.Name}: {p1.Board[0]}");
+            Console.WriteLine($"Plancia {p2.Name}: {p2.Board[0]}");
 
-            // Mostriamo le carte in mano
-            Console.WriteLine("\nCarte attualmente in mano:");
-            foreach (var card in player.Hand)
-            {
-                Console.WriteLine($" -> {card}");
-            }
+            // 1. Tentativo di attacco diretto con l'Orco nemico ancora vivo (Dovrebbe fallire)
+            Console.WriteLine("\n--- Test 1: Tentativo di attacco diretto con difensori attivi ---");
+            p1.AttackDirectly(goblin, p2);
 
-            // 4. Proviamo a giocare la prima carta disponibile nella mano
-            if (player.Hand.Count > 0)
-            {
-                Console.WriteLine("\nTentativo di giocare la prima carta in mano...");
-                Card cardToPlay = player.Hand[0];
-                player.PlayCard(cardToPlay);
-            }
+            // 2. Eliminiamo l'Orco dalla plancia (simulando una rimozione o distruzione)
+            Console.WriteLine("\n--- Test 2: Rimuoviamo il difensore e riproviamo ---");
+            p2.Board.Clear();
+            Console.WriteLine("L'Orco guardiano è stato eliminato dal campo.");
 
-            // 5. Stato finale del giocatore
-            Console.WriteLine($"\nCarte rimaste in mano: {player.Hand.Count}");
-            Console.WriteLine($"Stato finale -> HP: {player.Hp} | Mana residuo: {player.CurrentMana}");
+            // 3. Ora l'attacco diretto dovrebbe andare a buon fine
+            p1.AttackDirectly(goblin, p2);
         }
     }
 }
