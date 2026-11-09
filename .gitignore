@@ -1,0 +1,8 @@
+# .NET Core / Visual Studio
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+project.lock.json
+project.lock.json.lock
