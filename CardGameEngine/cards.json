@@ -1,0 +1,26 @@
+[
+  {
+    "Id": 1,
+    "Name": "Goblin Esploratore",
+    "ManaCost": 1,
+    "Attack": 2,
+    "Health": 1,
+    "HasTaunt": false
+  },
+  {
+    "Id": 2,
+    "Name": "Orco Guardiano",
+    "ManaCost": 3,
+    "Attack": 2,
+    "Health": 5,
+    "HasTaunt": true
+  },
+  {
+    "Id": 3,
+    "Name": "Arciere Elfico",
+    "ManaCost": 2,
+    "Attack": 3,
+    "Health": 2,
+    "HasTaunt": false
+  }
+]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CardGameEngine
 {
@@ -9,12 +10,20 @@ namespace CardGameEngine
         {
             Console.WriteLine("=== Lab 4 (Aggiornato): Regola di Protezione della Plancia ===");
 
-            Player p1 = new Player("Kris", 20, new List<Card> { new Card(1, "Goblin Esploratore", 1, 3, 1) });
-            Player p2 = new Player("Nemico", 20, new List<Card> { new Card(2, "Orco Guardiano", 2, 2, 3) });
+            List<Card> catalog = CardCatalogLoader.LoadFromFile("cards.json");
+
+            Card goblinTemplate = catalog.First(c => c.Id == 1);
+            Card orcoTemplate = catalog.First(c => c.Id == 2);
+
+            Player p1 = new Player("Kris", 20, new List<Card> { goblinTemplate });
+            Player p2 = new Player("Nemico", 20, new List<Card> { orcoTemplate });
 
             // Mettiamo una creatura pronta ad attaccare per Kris e un Orco a difesa del Nemico
-            Card goblin = new Card(1, "Goblin Esploratore", 1, 3, 1) { CanAttack = true };
-            Card orco = new Card(2, "Orco Guardiano", 2, 2, 3);
+            Card goblin = new Card(goblinTemplate.Id, goblinTemplate.Name, goblinTemplate.Cost, goblinTemplate.Attack, goblinTemplate.MaxDefense, goblinTemplate.CardType)
+            {
+                CanAttack = true
+            };
+            Card orco = new Card(orcoTemplate.Id, orcoTemplate.Name, orcoTemplate.Cost, orcoTemplate.Attack, orcoTemplate.MaxDefense, orcoTemplate.CardType);
 
             p1.Board.Add(goblin);
             p2.Board.Add(orco);
