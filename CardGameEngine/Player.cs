@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CardGameEngine
 {
@@ -80,16 +81,48 @@ namespace CardGameEngine
             return false;
         }
 
-        // Combattimento: Creatura vs Creatura
+        // Combattimento: Creatura vs Creatura (con controllo Provocazione)
         public void AttackCreature(Card attacker, Card target, Player opponent)
         {
+            if (attacker is null || target is null || opponent is null)
+            {
+                Console.WriteLine("[ERRORE] Attaccante, bersaglio o avversario non validi.");
+                return;
+            }
+
+            if (attacker.CardType != "Creature" || target.CardType != "Creature")
+            {
+                Console.WriteLine("[ERRORE] Il combattimento tra carte è consentito solo tra creature.");
+                return;
+            }
+
+            if (!Board.Contains(attacker))
+            {
+                Console.WriteLine($"[ERRORE] {attacker.Name} non è presente sulla plancia di {Name}.");
+                return;
+            }
+
+            if (!opponent.Board.Contains(target))
+            {
+                Console.WriteLine($"[ERRORE] {target.Name} non è presente sulla plancia di {opponent.Name}.");
+                return;
+            }
+
             if (!attacker.CanAttack)
             {
                 Console.WriteLine($"[ERRORE] {attacker.Name} non può attaccare in questo turno!");
                 return;
             }
 
-            Console.WriteLine($"\n[ATTACCO] {attacker.Name} (ATK {attacker.Attack}) attacca {target.Name} (DEF {target.CurrentDefense}) di {opponent.Name}!");
+            // REGOLA PROVOCAZIONE (Taunt): se l'avversario ha difensori con Provocazione, bisogna attaccare loro
+            bool opponentHasTaunt = opponent.Board.Any(c => c.HasTaunt);
+            if (opponentHasTaunt && !target.HasTaunt)
+            {
+                Console.WriteLine($"[ERRORE] Devi prima attaccare una creatura con Provocazione di {opponent.Name}!");
+                return;
+            }
+
+            Console.WriteLine($"\n[ATTACCO] {attacker.Name} (ATK {attacker.Attack}/DEF {attacker.CurrentDefense}) attacca {target.Name} (ATK {target.Attack}/DEF {target.CurrentDefense}) di {opponent.Name}!");
 
             // Danno reciproco simultaneo
             target.CurrentDefense -= attacker.Attack;

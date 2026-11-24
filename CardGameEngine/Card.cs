@@ -10,8 +10,18 @@ namespace CardGameEngine
         public int CurrentDefense { get; set; }
         public string CardType { get; set; }
         public bool CanAttack { get; set; }
+        public bool HasTaunt { get; set; }
+        public bool HasCharge { get; set; }
 
-        public Card(int id, string name, int cost, int attack, int defense, string cardType = "Creature")
+        public Card(
+            int id,
+            string name,
+            int cost,
+            int attack,
+            int defense,
+            string cardType = "Creature",
+            bool hasTaunt = false,
+            bool hasCharge = false)
         {
             Id = id;
             Name = name;
@@ -20,12 +30,18 @@ namespace CardGameEngine
             MaxDefense = defense;
             CurrentDefense = defense;
             CardType = cardType;
-            CanAttack = false; // Di norma una creatura appena evocata ha la "debolezza da evocazione"
+            HasTaunt = hasTaunt;
+            HasCharge = hasCharge;
+            CanAttack = hasCharge; // Se ha Carica attacca subito, altrimenti ha debolezza da evocazione
         }
 
         public override string ToString()
         {
-            return $"[{Name} | Costo: {Cost} | ATK: {Attack} / DEF: {CurrentDefense}/{MaxDefense} | Tipo: {CardType}]";
+            string abilities = "";
+            if (HasTaunt) abilities += " | Provocazione";
+            if (HasCharge) abilities += " | Carica";
+
+            return $"[{Name} | Costo: {Cost} | ATK: {Attack} / DEF: {CurrentDefense}/{MaxDefense} | Tipo: {CardType}{abilities}]";
         }
     }
 }
